@@ -63,7 +63,7 @@ export function useIntelligenceEngine() {
 
     try {
       const response = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
         {
           method: 'POST',
           headers: {
