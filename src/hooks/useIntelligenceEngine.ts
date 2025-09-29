@@ -88,7 +88,7 @@ export function useIntelligenceEngine() {
 
     try {
       const response = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
         {
           method: 'POST',
           headers: {
@@ -210,11 +210,12 @@ export function useIntelligenceEngine() {
       const abstracts = results.map(r => r.abstract).join('\n\n');
       
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiKey}`,
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-goog-api-key': geminiKey
           },
           body: JSON.stringify({
             contents: [{
@@ -285,11 +286,12 @@ export function useIntelligenceEngine() {
       const abstracts = results.map(r => r.abstract).join('\n\n');
       
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${geminiKey}`,
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-goog-api-key': geminiKey
           },
           body: JSON.stringify({
             contents: [{

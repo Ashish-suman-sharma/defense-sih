@@ -33,11 +33,12 @@ export function ConfigurationModal({ isOpen, onClose }: ConfigurationModalProps)
   const testGeminiAPI = async (apiKey: string): Promise<boolean> => {
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-goog-api-key': apiKey
           },
           body: JSON.stringify({
             contents: [{
@@ -48,6 +49,7 @@ export function ConfigurationModal({ isOpen, onClose }: ConfigurationModalProps)
       );
       return response.ok;
     } catch (error) {
+      console.error('API test error:', error);
       return false;
     }
   };
