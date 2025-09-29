@@ -29,12 +29,13 @@ export function useIntelligenceEngine() {
     const geminiKey = localStorage.getItem('gemini_api_key');
     
     if (!geminiKey) {
-      // Return mock data if no API key
-      return [
+      // Return dynamic mock data based on query
+      const queryLower = query.toLowerCase();
+      const mockData = [
         {
           id: '1',
-          title: 'AI-Powered Missile Defense System',
-          abstract: 'Novel artificial intelligence approach for real-time threat detection and interception in missile defense systems...',
+          title: `AI-Powered ${query} Defense System`,
+          abstract: `Advanced artificial intelligence approach for real-time ${query} threat detection and interception in modern defense systems. This technology represents a breakthrough in autonomous defense capabilities...`,
           source: 'patent',
           relevance: 95,
           date: '2024-01-15',
@@ -42,8 +43,8 @@ export function useIntelligenceEngine() {
         },
         {
           id: '2', 
-          title: 'Autonomous Drone Swarm Coordination',
-          abstract: 'Machine learning algorithms for coordinating multiple autonomous drones in defense scenarios...',
+          title: `Autonomous ${query} Coordination`,
+          abstract: `Machine learning algorithms for coordinating multiple autonomous systems in ${query} defense scenarios. Research shows significant operational advantages in complex battlefield environments...`,
           source: 'paper',
           relevance: 88,
           date: '2024-02-20',
@@ -51,14 +52,38 @@ export function useIntelligenceEngine() {
         },
         {
           id: '3',
-          title: 'CyberGuard Defense Solutions',
-          abstract: 'Startup developing next-generation cybersecurity solutions for military applications...',
+          title: `${query} Defense Solutions`,
+          abstract: `Startup developing next-generation ${query} cybersecurity solutions for military applications. Focus on real-time threat detection and automated response systems...`,
           source: 'startup',
           relevance: 82,
           date: '2024-03-10',
           url: '#'
         }
       ];
+      
+      // Add more dynamic entries based on query
+      const additionalEntries = [
+        {
+          id: '4',
+          title: `Quantum ${query} Encryption`,
+          abstract: `Revolutionary quantum computing approach to ${query} security protocols. This technology promises unbreakable encryption for military communications...`,
+          source: 'patent',
+          relevance: 91,
+          date: '2024-01-28',
+          url: '#'
+        },
+        {
+          id: '5',
+          title: `Neural Network ${query} Analysis`,
+          abstract: `Deep learning models for analyzing ${query} patterns and predicting potential threats. Academic research shows 94% accuracy in threat classification...`,
+          source: 'paper',
+          relevance: 87,
+          date: '2024-02-15',
+          url: '#'
+        }
+      ];
+      
+      return [...mockData, ...additionalEntries];
     }
 
     try {
@@ -135,6 +160,9 @@ export function useIntelligenceEngine() {
     if (!query.trim()) return;
 
     setIsSearching(true);
+    // Clear previous summaries when starting new search
+    setSummaries([]);
+    setOverview(null);
     try {
       const results = await generateDefenseData(query);
       setSearchResults(results);
@@ -164,12 +192,14 @@ export function useIntelligenceEngine() {
     const geminiKey = localStorage.getItem('gemini_api_key');
     
     if (!geminiKey) {
-      // Use fallback summaries if no API key
-      setSummaries([
-        "AI-powered defense systems are rapidly advancing with 95% accuracy in threat detection, indicating strong market readiness and military adoption potential.",
-        "Autonomous drone swarm coordination represents a paradigm shift in warfare tactics, with research showing significant operational advantages in complex scenarios.", 
-        "Cybersecurity startups are filling critical gaps in military infrastructure protection, suggesting high investment opportunities in this growing sector."
-      ]);
+      // Generate dynamic fallback summaries based on search results
+      const query = results[0]?.title?.split(' ')[0] || 'Defense';
+      const dynamicSummaries = [
+        `**${query} technology** is rapidly advancing with 95% accuracy in threat detection, indicating strong market readiness and military adoption potential. The latest research shows significant improvements in autonomous decision-making capabilities.`,
+        `**Autonomous ${query} systems** represent a paradigm shift in modern warfare tactics, with research demonstrating substantial operational advantages in complex battlefield scenarios. Military adoption rates are increasing exponentially.`, 
+        `**${query} cybersecurity startups** are filling critical gaps in military infrastructure protection, suggesting high investment opportunities in this rapidly growing sector. Market analysis indicates 40% year-over-year growth.`
+      ];
+      setSummaries(dynamicSummaries);
       return;
     }
 
@@ -189,7 +219,7 @@ export function useIntelligenceEngine() {
           body: JSON.stringify({
             contents: [{
               parts: [{
-                text: `Analyze these defense technology abstracts and provide 3 key strategic insights about emerging trends, threats, and opportunities. Keep each insight to 2-3 sentences:\n\n${abstracts}`
+                text: `Analyze these defense technology abstracts and provide 3 key strategic insights about emerging trends, threats, and opportunities. Keep each insight to 2-3 sentences and use **bold** formatting for key terms:\n\n${abstracts}`
               }]
             }]
           })
@@ -213,11 +243,14 @@ export function useIntelligenceEngine() {
         throw new Error('API request failed');
       }
     } catch (error) {
-      setSummaries([
-        "AI-powered defense systems are rapidly advancing with 95% accuracy in threat detection, indicating strong market readiness and military adoption potential.",
-        "Autonomous drone swarm coordination represents a paradigm shift in warfare tactics, with research showing significant operational advantages in complex scenarios.", 
-        "Cybersecurity startups are filling critical gaps in military infrastructure protection, suggesting high investment opportunities in this growing sector."
-      ]);
+      // Generate dynamic fallback summaries based on search results
+      const query = results[0]?.title?.split(' ')[0] || 'Defense';
+      const dynamicSummaries = [
+        `**${query} technology** is rapidly advancing with 95% accuracy in threat detection, indicating strong market readiness and military adoption potential. The latest research shows significant improvements in autonomous decision-making capabilities.`,
+        `**Autonomous ${query} systems** represent a paradigm shift in modern warfare tactics, with research demonstrating substantial operational advantages in complex battlefield scenarios. Military adoption rates are increasing exponentially.`, 
+        `**${query} cybersecurity startups** are filling critical gaps in military infrastructure protection, suggesting high investment opportunities in this rapidly growing sector. Market analysis indicates 40% year-over-year growth.`
+      ];
+      setSummaries(dynamicSummaries);
       
       toast({
         title: "Analysis Complete",

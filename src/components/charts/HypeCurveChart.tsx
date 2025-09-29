@@ -41,8 +41,35 @@ export function HypeCurveChart({ data }: HypeCurveChartProps) {
     'Plateau of Productivity'
   ];
 
-  // Mock hype curve data
-  const hypeValues = [20, 85, 25, 60, 80];
+  // Generate stable hype curve data based on insights
+  const generateHypeValues = () => {
+    if (data.length === 0) {
+      return [20, 85, 25, 60, 80]; // Default values
+    }
+
+    // Create a stable seed based on data
+    const seed = data.length + data.reduce((acc, item) => acc + item.title.length, 0);
+    
+    // Simple seeded random function
+    const seededRandom = (seed: number) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
+
+    // Count technologies in each phase
+    const phaseCounts = phases.map(phase => 
+      data.filter(insight => insight.hype === phase).length
+    );
+
+    // Generate values based on counts with stable randomness
+    return phaseCounts.map((count, index) => {
+      const baseValue = count > 0 ? Math.min(90, count * 25 + 20) : 15;
+      const randomVariation = (seededRandom(seed + index) * 20) - 10; // -10 to +10
+      return Math.max(5, Math.min(95, baseValue + randomVariation));
+    });
+  };
+
+  const hypeValues = generateHypeValues();
 
   const chartData = {
     labels: phases,

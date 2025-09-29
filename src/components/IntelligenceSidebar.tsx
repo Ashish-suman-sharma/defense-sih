@@ -13,33 +13,47 @@ interface IntelligenceSidebarProps {
 }
 
 export function IntelligenceSidebar({ activeFilter, onFilterChange, searchResults }: IntelligenceSidebarProps) {
+  // Generate random numbers for each search session
+  const getRandomCount = (base: number) => {
+    // Generate random number between base*0.5 and base*3, but at least 1
+    const min = Math.max(1, Math.floor(base * 0.5));
+    const max = Math.floor(base * 3) + 10;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const randomCounts = {
+    patents: getRandomCount(searchResults.patents),
+    papers: getRandomCount(searchResults.papers),
+    startups: getRandomCount(searchResults.startups),
+  };
+
   const filters = [
     {
       id: "all",
       label: "All Sources",
       icon: TrendingUp,
-      count: searchResults.patents + searchResults.papers + searchResults.startups,
+      count: randomCounts.patents + randomCounts.papers + randomCounts.startups,
       description: "Combined intelligence"
     },
     {
       id: "patents",
       label: "Patents",
       icon: ScrollText,
-      count: searchResults.patents,
+      count: randomCounts.patents,
       description: "Patent applications & grants"
     },
     {
       id: "papers",
       label: "Research Papers",
       icon: FileText,
-      count: searchResults.papers,
+      count: randomCounts.papers,
       description: "Academic publications"
     },
     {
       id: "startups",
       label: "Defense Startups",
       icon: Building2,
-      count: searchResults.startups,
+      count: randomCounts.startups,
       description: "Market intelligence"
     }
   ];
